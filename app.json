@@ -1,0 +1,46 @@
+{
+  "expo": {
+    "name": "Kickstart Vendor Hub",
+    "slug": "vendor-management",
+    "scheme": "vendor-management",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "icon": "./assets/images/kickstart-logo.png",
+    "splash": {
+      "image": "./assets/images/kickstart-logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#000000"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-audio",
+      "expo-sharing",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow access to your photos to attach an invoice.",
+          "cameraPermission": "Allow the camera to photograph an invoice."
+        }
+      ]
+    ],
+    "android": {
+      "package": "com.company.vendormanagement",
+      "softwareKeyboardLayoutMode": "resize",
+      "usesCleartextTraffic": false,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/kickstart-logo.png",
+        "backgroundColor": "#000000"
+      }
+    },
+    "ios": {
+      "bundleIdentifier": "com.company.vendormanagement",
+      "infoPlist": {
+        "NSAppTransportSecurity": {
+          "NSAllowsLocalNetworking": true
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Node/Express API only. Do not run Expo here — run the mobile app from the repo root (Vendor management). Use npm start in this folder for the API.",
+  "scripts": {
+    "dev": "npx --yes kill-port@2.0.1 4000 && tsx src/server.ts",
+    "build": "npx tsc -p tsconfig.json",
+    "start": "npx --yes kill-port@2.0.1 4000 && tsx src/server.ts",
+    "start:compiled": "npx --yes kill-port@2.0.1 4000 && node dist/server.js",
+    "start:safe": "tsx src/server.ts",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:seed": "tsx prisma/seed.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@prisma/client": "^6.19.3",
+    "prisma": "^6.19.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "multer": "^2.0.2",
+    "tsx": "^4.21.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/multer": "^1.4.12",
+    "@types/node": "^25.6.2",
+    "typescript": "^6.0.3"
+  }
+}

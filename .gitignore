@@ -1,0 +1,16 @@
+node_modules
+backend/uploads
+backend/prisma/generated-client
+.env
+.env.*
+!.env.example
+backend/.env
+backend/.env.*
+!backend/.env.example
+.expo
+dist
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+*.log
+.DS_Store

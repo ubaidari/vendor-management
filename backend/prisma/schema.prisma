@@ -1,0 +1,109 @@
+generator client {
+  provider = "prisma-client-js"
+  // Outside node_modules so Windows AV / locks on node_modules\.prisma\client\query_engine*.dll are avoided.
+  output   = "./generated-client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TaskStatus {
+  pending
+  in_progress
+  on_hold
+  completed
+}
+
+enum TaskEventType {
+  created
+  updated
+  costs_updated
+  moved_to_hold
+  marked_completed
+  soft_deleted
+}
+
+model Location {
+  id                String   @id @default(cuid())
+  slug              String   @unique
+  name              String
+  adminPin          String   @unique
+  vendorPin         String   @unique
+  /** Bumps when admin changes `vendorPin`; vendor apps must re-enter PIN when this changes. */
+  vendorPinVersion  Int      @default(1)
+  createdAt         DateTime @default(now())
+  branches   Branch[]
+  vendors    Vendor[]
+  tasks      Task[]
+}
+
+model Branch {
+  id          String   @id @default(cuid())
+  name        String
+  locationId  String
+  location    Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  tasks       Task[]
+
+  @@unique([locationId, name])
+  @@index([locationId])
+}
+
+model Vendor {
+  id          String   @id @default(cuid())
+  name        String
+  locationId  String
+  location    Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  tasks       Task[]
+
+  @@unique([locationId, name])
+  @@index([locationId])
+}
+
+model Task {
+  id               String     @id @default(cuid())
+  title            String
+  category         String
+  description      String     @default("N/A")
+  status           TaskStatus @default(pending)
+  labourCost       Int        @default(0)
+  installationCost Int        @default(0)
+  repairCost       Int        @default(0)
+  extraCost        Int        @default(0)
+  extraReason      String     @default("N/A")
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  completedAt      DateTime?
+  isDeleted        Boolean    @default(false)
+  deletedAt        DateTime?
+  branchId         String
+  vendorId         String
+  locationId       String
+  /** Server-side filename under uploads/invoices (no path separators). */
+  invoiceStoredName   String?
+  invoiceOriginalName String?
+  invoiceMimeType     String?
+  invoiceUploadedAt   DateTime?
+  branch           Branch     @relation(fields: [branchId], references: [id], onDelete: Restrict)
+  vendor           Vendor     @relation(fields: [vendorId], references: [id], onDelete: Restrict)
+  location         Location   @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  events           TaskEvent[]
+
+  /** Primary list query: one city, active tasks, newest first (scales with task volume). */
+  @@index([locationId, isDeleted, createdAt])
+  @@index([isDeleted, createdAt])
+  @@index([status, isDeleted])
+}
+
+model TaskEvent {
+  id        String        @id @default(cuid())
+  taskId    String
+  type      TaskEventType
+  actor     String
+  message   String
+  createdAt DateTime      @default(now())
+  task      Task          @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@index([taskId, createdAt])
+}

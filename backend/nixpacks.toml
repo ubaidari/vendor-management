@@ -1,0 +1,6 @@
+# Railway/Nixpacks: ensure TypeScript + Prisma CLI exist during build (devDependencies).
+[phases.install]
+cmds = ["npm ci --include=dev"]
+
+[phases.build]
+cmds = ["npx prisma generate", "npm run build"]

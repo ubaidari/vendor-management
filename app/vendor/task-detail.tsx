@@ -14,7 +14,6 @@ import {
   TextInput,
   View
 } from "react-native";
-import * as ImageManipulator from "expo-image-manipulator";
 import * as ImagePicker from "expo-image-picker";
 import { router, useLocalSearchParams } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -23,6 +22,7 @@ import { colors, spacing } from "@/constants/theme";
 import { useTaskStore } from "@/hooks/useTaskStore";
 import { apiClient } from "@/services/apiClient";
 import { downloadTaskInvoice } from "@/services/invoiceDownload";
+import { buildTaskInvoiceFormData } from "@/services/invoiceFormData";
 import { taskService } from "@/services/taskService";
 import { getVendorNameForCitySlug } from "@/constants/locationCatalog";
 import { costNumberToInput, parseCostInteger, sanitizeIntegerCostInput } from "@/utils/costInput";
@@ -49,7 +49,7 @@ const formatDateTime = (value?: string | null): string => {
 export default function VendorTaskDetailScreen() {
   const { taskId } = useLocalSearchParams<{ taskId?: string }>();
   const insets = useSafeAreaInsets();
-  const { tasks, updateTaskCosts, holdTask, markTaskCompleted, refresh } = useTaskStore();
+  const { tasks, updateTaskCosts, holdTask, markTaskCompleted, applyInvoiceUploadResult } = useTaskStore();
   const sessionSlug = apiClient.getSessionSlug();
   const cityName = apiClient.getSessionLocationName();
   const expectedVendor = getVendorNameForCitySlug(sessionSlug);
@@ -75,6 +75,8 @@ export default function VendorTaskDetailScreen() {
   const cardOpacity = useRef(new Animated.Value(0)).current;
   const [keyboardPad, setKeyboardPad] = useState(0);
   const keyboardHeightRef = useRef(0);
+  /** Only hydrate cost fields from the server when opening a different task — not on every store refresh (e.g. invoice upload). */
+  const hydratedCostForTaskIdRef = useRef<string | null>(null);
   const fieldLayoutRef = useRef<Record<CostFieldKey, { y: number; height: number }>>({
     labour: { y: 0, height: 0 },
     installation: { y: 0, height: 0 },
@@ -167,6 +169,10 @@ export default function VendorTaskDetailScreen() {
     if (!task) {
       return;
     }
+    if (hydratedCostForTaskIdRef.current === task.id) {
+      return;
+    }
+    hydratedCostForTaskIdRef.current = task.id;
     setLabourCost(costNumberToInput(task.labourCost));
     setInstallationCost(costNumberToInput(task.installationCost));
     setInstallationComments(task.extraReason && task.extraReason !== "N/A" ? task.extraReason : "");
@@ -250,26 +256,12 @@ export default function VendorTaskDetailScreen() {
     }
   };
 
-  const toInvoiceJpegUri = async (sourceUri: string): Promise<string> => {
-    const out = await ImageManipulator.manipulateAsync(sourceUri, [], {
-      compress: 0.85,
-      format: ImageManipulator.SaveFormat.JPEG
-    });
-    return out.uri;
-  };
-
   const uploadInvoiceFromUri = async (sourceUri: string): Promise<void> => {
     setUploadingInvoice(true);
     try {
-      const jpegUri = await toInvoiceJpegUri(sourceUri);
-      const form = new FormData();
-      form.append("invoice", {
-        uri: jpegUri,
-        name: "invoice.jpg",
-        type: "image/jpeg"
-      } as unknown as Blob);
-      await taskService.uploadTaskInvoice(task.id, form);
-      await refresh();
+      const form = await buildTaskInvoiceFormData(sourceUri);
+      const meta = await taskService.uploadTaskInvoice(task.id, form);
+      applyInvoiceUploadResult(task.id, meta);
       Alert.alert("Invoice uploaded", "Your invoice was saved.");
     } catch (error) {
       const message = error instanceof Error ? error.message : "Upload failed.";
@@ -323,7 +315,7 @@ export default function VendorTaskDetailScreen() {
     }
   };
 
-  const isVendorActionBusy = isMarkingComplete || isHoldPending;
+  const isVendorActionBusy = isMarkingComplete || isHoldPending || uploadingInvoice;
 
   return (
     <>
@@ -488,10 +480,10 @@ export default function VendorTaskDetailScreen() {
               styles.invoiceOutlineButton,
               hovered && styles.invoiceOutlineButtonHover,
               pressed && styles.invoiceOutlineButtonPress,
-              (uploadingInvoice || isVendorActionBusy) && styles.invoiceOutlineButtonDisabled
+              isVendorActionBusy && styles.invoiceOutlineButtonDisabled
             ]}
             onPress={() => void pickInvoiceFromLibrary()}
-            disabled={uploadingInvoice || isVendorActionBusy}
+            disabled={isVendorActionBusy}
           >
             <MaterialIcons name="photo-library" size={18} color={colors.primary} />
             <Text style={styles.invoiceOutlineButtonText}>
@@ -503,10 +495,10 @@ export default function VendorTaskDetailScreen() {
               styles.invoiceOutlineButton,
               hovered && styles.invoiceOutlineButtonHover,
               pressed && styles.invoiceOutlineButtonPress,
-              (uploadingInvoice || isVendorActionBusy) && styles.invoiceOutlineButtonDisabled
+              isVendorActionBusy && styles.invoiceOutlineButtonDisabled
             ]}
             onPress={() => void takeInvoicePhoto()}
-            disabled={uploadingInvoice || isVendorActionBusy}
+            disabled={isVendorActionBusy}
           >
             <MaterialIcons name="photo-camera" size={18} color={colors.primary} />
             <Text style={styles.invoiceOutlineButtonText}>Camera</Text>

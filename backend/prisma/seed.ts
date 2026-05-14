@@ -14,7 +14,7 @@ const LOCATIONS = [
 
 /** C4 = Islamabad only. L1 = Lahore only. Karachi branches do not appear in other cities. */
 const BRANCHES_BY_SLUG: Record<(typeof LOCATIONS)[number]["slug"], readonly string[]> = {
-  karachi: ["VitalFoakh", "BRR", "Endeavour", "Creekside", "Mega"],
+  karachi: ["VitalFoakh", "BRR", "Endeavour", "Creekside", "Mega", "Clifton"],
   islamabad: ["C4"],
   lahore: ["L1"]
 };

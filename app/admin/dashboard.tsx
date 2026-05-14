@@ -4,6 +4,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
 import { colors, spacing } from "@/constants/theme";
 import { StatCard } from "@/components/StatCard";
+import { useTaskListAutoSync } from "@/hooks/useTaskListAutoSync";
 import { useTaskStore } from "@/hooks/useTaskStore";
 import { BRANCHES_BY_SLUG } from "@/constants/locationCatalog";
 import { getSessionCityDisplayLabel, type CitySlug } from "@/constants/locations";
@@ -184,6 +185,8 @@ const AdminDashboardScreen: React.FC = () => {
       setRefreshing(false);
     }
   }, [refresh]);
+
+  useTaskListAutoSync(refresh);
 
   const handleRangeSelect = (nextRange: BranchRange): void => {
     setBranchRange(nextRange);

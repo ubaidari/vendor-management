@@ -120,7 +120,10 @@ export const taskService = {
   },
 
   /** Multipart upload; do not set Content-Type (boundary is set automatically). */
-  uploadTaskInvoice: async (taskId: string, body: FormData): Promise<void> => {
+  uploadTaskInvoice: async (
+    taskId: string,
+    body: FormData
+  ): Promise<{ hasInvoice: boolean; invoiceOriginalName: string | null; invoiceUploadedAt: string | null }> => {
     const base = apiClient.getBaseUrl().replace(/\/$/, "");
     const url = `${base}/tasks/${taskId}/invoice`;
     const response = await fetch(url, {
@@ -130,8 +133,8 @@ export const taskService = {
       },
       body
     });
+    const raw = await response.text();
     if (!response.ok) {
-      const raw = await response.text();
       let message = raw || "Upload failed";
       try {
         const parsed = JSON.parse(raw) as { message?: string };
@@ -142,6 +145,26 @@ export const taskService = {
         /* keep */
       }
       throw new Error(message);
+    }
+    try {
+      const parsed = JSON.parse(raw) as {
+        hasInvoice?: boolean;
+        invoiceOriginalName?: string | null;
+        invoiceUploadedAt?: string | null;
+      };
+      return {
+        hasInvoice: Boolean(parsed.hasInvoice),
+        invoiceOriginalName:
+          typeof parsed.invoiceOriginalName === "string" ? parsed.invoiceOriginalName : null,
+        invoiceUploadedAt:
+          typeof parsed.invoiceUploadedAt === "string" ? parsed.invoiceUploadedAt : null
+      };
+    } catch {
+      return {
+        hasInvoice: true,
+        invoiceOriginalName: "invoice.jpg",
+        invoiceUploadedAt: new Date().toISOString()
+      };
     }
   }
 };

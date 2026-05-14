@@ -1,4 +1,6 @@
 node_modules
+/android
+/ios
 backend/uploads
 backend/prisma/generated-client
 .env

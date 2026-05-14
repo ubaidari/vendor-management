@@ -23,7 +23,11 @@ export async function verifyVendorPortalPinOnServer(pin: string): Promise<Vendor
   const base = apiClient.getBaseUrl().replace(/\/$/, "");
   const response = await fetch(`${base}/vendor/portal-pin/verify`, {
     method: "POST",
-    headers: { Accept: "application/json", "Content-Type": "application/json" },
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      ...apiClient.getLocationHeaders()
+    },
     body: JSON.stringify({ pin: pin.trim() })
   });
   const raw = await response.text();

@@ -6,9 +6,9 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
-    "icon": "./assets/images/kickstart-logo.png",
+    "icon": "./assets/images/app-icon.png",
     "splash": {
-      "image": "./assets/images/kickstart-logo.png",
+      "image": "./assets/images/app-splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#000000"
     },
@@ -23,16 +23,32 @@
           "photosPermission": "Allow access to your photos to attach an invoice.",
           "cameraPermission": "Allow the camera to photograph an invoice."
         }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 36,
+            "targetSdkVersion": 36,
+            "enablePngCrunchInReleaseBuilds": false,
+            "usesCleartextTraffic": true
+          }
+        }
       ]
     ],
     "android": {
       "package": "com.company.vendormanagement",
       "softwareKeyboardLayoutMode": "resize",
-      "usesCleartextTraffic": false,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/kickstart-logo.png",
+        "foregroundImage": "./assets/images/app-icon.png",
         "backgroundColor": "#000000"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.MODIFY_AUDIO_SETTINGS",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"
+      ]
     },
     "ios": {
       "bundleIdentifier": "com.company.vendormanagement",
@@ -40,6 +56,12 @@
         "NSAppTransportSecurity": {
           "NSAllowsLocalNetworking": true
         }
+      }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "0e3d6422-5fb9-45a7-bed7-2e4c11e5d2e3"
       }
     }
   }

@@ -20,7 +20,12 @@ const readJson = async <T>(response: Response): Promise<T> => {
 
 export const locationApi = {
   listPublic: async (): Promise<PublicLocation[]> => {
-    const response = await fetch(`${apiClient.getBaseUrl()}/locations`);
+    const response = await fetch(`${apiClient.getBaseUrl()}/locations`, {
+      headers: {
+        Accept: "application/json",
+        ...apiClient.getLocationHeaders()
+      }
+    });
     return readJson<PublicLocation[]>(response);
   }
 };

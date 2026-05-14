@@ -3,9 +3,10 @@
  *
  * Islamabad: **C4 only** (never Lahore/Karachi).
  * Lahore: **L1 only** (never Islamabad/Karachi).
+ * Karachi: VitalFoakh, BRR, Endeavour, Creekside, Mega, Clifton — keep in sync with `prisma/seed.ts` and `constants/locationCatalog.ts`.
  */
 export const BRANCHES_BY_SLUG = {
-  karachi: ["VitalFoakh", "BRR", "Endeavour", "Creekside", "Mega"],
+  karachi: ["VitalFoakh", "BRR", "Endeavour", "Creekside", "Mega", "Clifton"],
   islamabad: ["C4"],
   lahore: ["L1"]
 } as const;

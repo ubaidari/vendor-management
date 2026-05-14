@@ -1,5 +1,18 @@
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? "http://localhost:4000";
 
+/** LocalTunnel serves a browser warning unless this header is sent on programmatic requests. */
+const tunnelBypassHeaders = (): Record<string, string> => {
+  try {
+    const host = new URL(API_BASE_URL).hostname.toLowerCase();
+    if (host.endsWith("loca.lt") || host.includes("localtunnel")) {
+      return { "Bypass-Tunnel-Reminder": "true" };
+    }
+  } catch {
+    /* ignore invalid EXPO_PUBLIC_API_URL */
+  }
+  return {};
+};
+
 export type PortalRole = "admin" | "vendor";
 
 let sessionRole: PortalRole | null = null;
@@ -53,7 +66,7 @@ export const apiClient = {
   },
 
   getLocationHeaders: (): Record<string, string> => {
-    const headers: Record<string, string> = {};
+    const headers: Record<string, string> = { ...tunnelBypassHeaders() };
     if (sessionRole && sessionSlug) {
       headers["X-Location-Slug"] = sessionSlug;
       headers["X-Portal-Role"] = sessionRole;

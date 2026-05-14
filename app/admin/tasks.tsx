@@ -19,6 +19,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import type { TaskStatus } from "@/data/tasks";
 import { colors, spacing } from "@/constants/theme";
 import { TaskCard } from "@/components/TaskCard";
+import { useTaskListAutoSync } from "@/hooks/useTaskListAutoSync";
 import { useTaskStore } from "@/hooks/useTaskStore";
 import { ADMIN_TASK_CATEGORIES } from "@/constants/adminTaskCategories";
 import { BRANCHES_BY_SLUG, VENDOR_NAME_BY_SLUG } from "@/constants/locationCatalog";
@@ -136,6 +137,8 @@ const AdminTasksScreen: React.FC = () => {
       setListRefreshing(false);
     }
   }, [refresh]);
+
+  useTaskListAutoSync(refresh);
 
   const invoicePreviewImageHeight = useMemo(
     () => Math.min(560, Math.floor(Dimensions.get("window").height * 0.62)),

@@ -46,6 +46,11 @@ type TaskStoreContextValue = {
   markTaskCompleted: (taskId: string) => Promise<void>;
   deleteTask: (taskId: string) => Promise<void>;
   refresh: () => Promise<void>;
+  /** Merge invoice flags after upload — avoids a full refetch that can reset in-progress form state. */
+  applyInvoiceUploadResult: (
+    taskId: string,
+    meta: { hasInvoice: boolean; invoiceOriginalName: string | null; invoiceUploadedAt: string | null }
+  ) => void;
 };
 
 const TaskStoreContext = createContext<TaskStoreContextValue | undefined>(undefined);
@@ -224,6 +229,27 @@ export const TaskProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
     }
   }, [refresh]);
 
+  const applyInvoiceUploadResult = useCallback(
+    (
+      taskId: string,
+      meta: { hasInvoice: boolean; invoiceOriginalName: string | null; invoiceUploadedAt: string | null }
+    ): void => {
+      setTasks((currentTasks) =>
+        currentTasks.map((t) =>
+          t.id === taskId
+            ? {
+                ...t,
+                hasInvoice: meta.hasInvoice,
+                invoiceOriginalName: meta.invoiceOriginalName,
+                invoiceUploadedAt: meta.invoiceUploadedAt
+              }
+            : t
+        )
+      );
+    },
+    []
+  );
+
   const deleteTask = useCallback(async (taskId: string): Promise<void> => {
     let rollback: Task[] | null = null;
     setTasks((currentTasks) => {
@@ -255,7 +281,8 @@ export const TaskProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
       holdTask,
       markTaskCompleted,
       deleteTask,
-      refresh
+      refresh,
+      applyInvoiceUploadResult
     }),
     [
       tasks,
@@ -269,7 +296,8 @@ export const TaskProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
       holdTask,
       markTaskCompleted,
       deleteTask,
-      refresh
+      refresh,
+      applyInvoiceUploadResult
     ]
   );
 

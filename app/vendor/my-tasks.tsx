@@ -3,6 +3,7 @@ import { Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from "r
 import { router } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
 import { colors, spacing } from "@/constants/theme";
+import { useTaskListAutoSync } from "@/hooks/useTaskListAutoSync";
 import { useTaskStore } from "@/hooks/useTaskStore";
 import { apiClient } from "@/services/apiClient";
 import { locationSession } from "@/services/locationSession";
@@ -80,6 +81,8 @@ const VendorMyTasksScreen: React.FC = () => {
       setRefreshing(false);
     }
   }, [refresh]);
+
+  useTaskListAutoSync(refresh);
 
   return (
     <ScrollView

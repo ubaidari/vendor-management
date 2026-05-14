@@ -17,7 +17,8 @@ import { colors, spacing } from "@/constants/theme";
 import { adminGate } from "@/services/adminGate";
 import { appRoleMode, type AppUsageMode } from "@/services/appRoleMode";
 
-const kickstartLogo = require("../assets/images/kickstart-logo.png");
+/** Valid PNG (see assets/images); avoids AAPT2 compile failure from legacy mislabeled file */
+const kickstartLogo = require("../assets/images/app-splash.png");
 
 /** First launch (or reset): how will this device be used? */
 const UsageChoiceScreen: React.FC<{

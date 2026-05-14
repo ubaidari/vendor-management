@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kickstart Vendor Hub — Operations Manual</title>
+  <style>
+    :root {
+      --ink: #0f172a;
+      --muted: #475569;
+      --light: #64748b;
+      --border: #e2e8f0;
+      --surface: #f8fafc;
+      --brand: #1e3a8a;
+      --brand-soft: #dbeafe;
+      --accent: #0369a1;
+      --warn-bg: #fffbeb;
+      --warn-border: #f59e0b;
+    }
+    @page {
+      margin: 12mm 14mm 18mm 14mm;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: "Segoe UI", "Helvetica Neue", Roboto, Helvetica, Arial, sans-serif;
+      font-size: 10pt;
+      line-height: 1.5;
+      color: var(--ink);
+      margin: 0;
+      padding: 0;
+      background: #fff;
+      hyphens: auto;
+      -webkit-hyphens: auto;
+    }
+    .cover {
+      page-break-after: always;
+      min-height: 268mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 8mm 4mm 12mm;
+      border-bottom: 4px solid var(--brand);
+    }
+    .cover-brand {
+      font-size: 11pt;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .cover h1 {
+      font-size: 26pt;
+      font-weight: 700;
+      margin: 8mm 0 4mm;
+      line-height: 1.15;
+      color: var(--brand);
+      letter-spacing: -0.02em;
+    }
+    .cover-tagline {
+      font-size: 13pt;
+      color: var(--muted);
+      font-weight: 400;
+      margin: 0 0 10mm;
+      max-width: 36ch;
+    }
+    .cover-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6mm;
+      font-size: 9.5pt;
+      margin-top: 10mm;
+    }
+    .cover-meta dl {
+      margin: 0;
+      padding: 10px 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    .cover-meta dt {
+      font-size: 8pt;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--light);
+      margin: 0 0 2px;
+    }
+    .cover-meta dd {
+      margin: 0;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .cover-classified {
+      background: var(--warn-bg);
+      border: 1px solid var(--warn-border);
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 9.5pt;
+    }
+    .cover-classified strong { color: #92400e; }
+    .cover-footer {
+      font-size: 8.5pt;
+      color: var(--light);
+      border-top: 1px solid var(--border);
+      padding-top: 8px;
+    }
+
+    .content {
+      max-width: 100%;
+    }
+    h2 {
+      font-size: 13pt;
+      color: var(--brand);
+      margin: 14px 0 10px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid var(--border);
+      page-break-after: avoid;
+    }
+    h3 {
+      font-size: 11pt;
+      margin: 12px 0 6px;
+      color: var(--ink);
+      page-break-after: avoid;
+    }
+    h4 {
+      font-size: 10pt;
+      margin: 10px 0 4px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    p { margin: 6px 0 8px; }
+    ul, ol { margin: 6px 0 10px; padding-left: 1.2em; }
+    li { margin: 3px 0; }
+    .lead {
+      font-size: 10.5pt;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .classified-inline {
+      background: var(--warn-bg);
+      border-left: 4px solid var(--warn-border);
+      padding: 8px 12px;
+      margin: 10px 0;
+      font-size: 9.5pt;
+      border-radius: 0 6px 6px 0;
+    }
+    table.data {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 9.5pt;
+      margin: 8px 0 12px;
+    }
+    table.data th,
+    table.data td {
+      border: 1px solid var(--border);
+      padding: 7px 9px;
+      text-align: left;
+      vertical-align: top;
+    }
+    table.data th {
+      background: linear-gradient(180deg, #f1f5f9 0%, #e8eef5 100%);
+      font-weight: 600;
+      color: var(--ink);
+      font-size: 9pt;
+    }
+    table.data code {
+      font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+      font-size: 9pt;
+      background: #f1f5f9;
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+    .toc {
+      page-break-after: always;
+    }
+    .toc h2 { margin-top: 0; }
+    .toc ol {
+      margin: 0;
+      padding-left: 0;
+      list-style: none;
+      counter-reset: toc;
+    }
+    .toc li {
+      margin: 5px 0;
+      padding: 4px 0;
+      border-bottom: 1px dotted var(--border);
+      font-size: 10pt;
+    }
+    .toc a {
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .toc .toc-sub {
+      margin-left: 14px;
+      font-size: 9.5pt;
+      color: var(--muted);
+      border-bottom: none;
+      padding: 2px 0;
+    }
+    figure {
+      margin: 12px 0;
+      page-break-inside: avoid;
+      text-align: center;
+    }
+    figure img {
+      max-width: 240px;
+      width: 100%;
+      height: auto;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+    }
+    figcaption {
+      font-size: 8.5pt;
+      color: var(--light);
+      margin-top: 6px;
+      font-weight: 500;
+    }
+    .figure-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      align-items: flex-start;
+      page-break-inside: avoid;
+    }
+    .figure-grid figure {
+      flex: 1 1 200px;
+      max-width: 260px;
+      margin: 8px 0;
+    }
+    .callout {
+      background: var(--brand-soft);
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin: 10px 0;
+      font-size: 9.5pt;
+    }
+    .callout strong { color: var(--brand); }
+    .section-num {
+      display: inline-block;
+      min-width: 2em;
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .sig-block {
+      margin-top: 16px;
+      page-break-inside: avoid;
+    }
+    .sig-block table { width: 100%; font-size: 9.5pt; }
+    .sig-block td { border: 1px solid var(--border); padding: 12px; height: 36px; vertical-align: bottom; }
+    .small { font-size: 9pt; color: var(--muted); }
+    .doc-end {
+      margin-top: 20px;
+      padding-top: 12px;
+      border-top: 2px solid var(--border);
+      font-size: 8.5pt;
+      color: var(--light);
+      text-align: center;
+    }
+    .workflow-steps {
+      counter-reset: ws;
+      list-style: none;
+      padding-left: 0;
+      margin: 8px 0;
+    }
+    .workflow-steps li {
+      position: relative;
+      padding-left: 28px;
+      margin: 8px 0;
+    }
+    .workflow-steps li::before {
+      counter-increment: ws;
+      content: counter(ws);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 20px;
+      height: 20px;
+      background: var(--brand);
+      color: #fff;
+      border-radius: 50%;
+      font-size: 8pt;
+      font-weight: 700;
+      text-align: center;
+      line-height: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cover -->
+  <div class="cover">
+    <div>
+      <div class="cover-brand">Operations documentation</div>
+      <h1>Kickstart Vendor Hub</h1>
+      <p class="cover-tagline">Mobile operations manual for admin staff and field vendors — illustrated procedures, security guidance, and Karachi deployment reference.</p>
+      <div class="cover-classified">
+        <strong>Classification: Internal use.</strong> Contains operational credentials and deployment-specific examples. Not for public distribution. Redact screenshots before external sharing.
+      </div>
+    </div>
+    <div class="cover-meta">
+      <dl>
+        <dt>Document version</dt>
+        <dd>3.1 — Professional edition</dd>
+      </dl>
+      <dl>
+        <dt>Example geography</dt>
+        <dd>Karachi (seed-aligned)</dd>
+      </dl>
+      <dl>
+        <dt>Publication date</dt>
+        <dd>May 2026</dd>
+      </dl>
+      <dl>
+        <dt>Primary audience</dt>
+        <dd>Operations · Field vendors · IT support</dd>
+      </dl>
+    </div>
+    <div class="cover-footer">
+      Generated from <code style="font-size:8pt;">docs/Kickstart-Vendor-Hub-User-Manual-Print.html</code> · Source screenshots: <code style="font-size:8pt;">docs/screenshots/manual/</code>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- TOC -->
+    <section class="toc" id="toc">
+      <h2>Table of contents</h2>
+      <ol>
+        <li><a href="#summary">Summary &amp; classification</a></li>
+        <li><a href="#purpose">Purpose, scope &amp; audience</a></li>
+        <li><a href="#roles">Roles &amp; portals</a></li>
+        <li><a href="#credentials">Credential reference (Karachi)</a></li>
+        <li><a href="#workflow">End-to-end workflow overview</a></li>
+        <li><a href="#screens">Illustrated procedures (screenshots)</a></li>
+        <li class="toc-sub">Figures 1–16 — Admin unlock through vendor completion</li>
+        <li><a href="#tasks-ref">Task statuses &amp; actions</a></li>
+        <li><a href="#security">Security, PIN rotation &amp; device hygiene</a></li>
+        <li><a href="#troubleshooting">Troubleshooting</a></li>
+        <li><a href="#glossary">Glossary</a></li>
+        <li><a href="#support">Support &amp; escalation</a></li>
+        <li><a href="#doc-control">Document control &amp; approvals</a></li>
+      </ol>
+    </section>
+
+    <section id="summary">
+      <h2><span class="section-num">1</span> Summary &amp; classification</h2>
+      <p class="lead">This manual describes how to use the <strong>Kickstart Vendor Hub</strong> mobile application for day-to-day maintenance and operations across cities, branches (sites), and vendor accounts.</p>
+      <div class="classified-inline">
+        <strong>Internal use only.</strong> Default passwords and PINs in this document match a sample/staging seed for illustration. Production environments must follow your organisation’s credential policy. Replace or redact values before distributing outside authorised teams.
+      </div>
+      <p>The PDF pairs concise guidance with device screenshots captured on a representative handset. Currency examples use <strong>PKR</strong>.</p>
+    </section>
+
+    <section id="purpose">
+      <h2><span class="section-num">2</span> Purpose, scope &amp; audience</h2>
+      <h3>Purpose</h3>
+      <p>Enable consistent onboarding for operations managers, coordinators, and vendor technicians: first-run setup, secure admin access, task creation and oversight, vendor execution (costs, photos, completion), and PIN governance.</p>
+      <h3>Scope</h3>
+      <p>In scope: mobile app flows for <strong>Admin &amp; operations</strong> and <strong>Vendor portal</strong>, city-scoped data, dashboards, task lifecycle, and PIN/device-lock administration. Out of scope: backend API administration, database migrations, and third-party identity providers unless your organisation layers them on.</p>
+      <h3>Audience</h3>
+      <table class="data">
+        <tr><th>Role</th><th>Typical use of this manual</th></tr>
+        <tr><td>Operations / admin</td><td>Unlock admin portal, switch city, create tasks, review costs, rotate vendor PINs, manage device password.</td></tr>
+        <tr><td>Field vendor</td><td>Sign in with city PIN, filter by branch, update task costs, attach evidence, hold or complete work.</td></tr>
+        <tr><td>IT / support</td><td>Credential expectations, troubleshooting table, escalation paths.</td></tr>
+      </table>
+    </section>
+
+    <section id="roles">
+      <h2><span class="section-num">3</span> Roles &amp; portals</h2>
+      <table class="data">
+        <tr><th>Portal</th><th>Primary users</th><th>Capabilities (summary)</th></tr>
+        <tr>
+          <td><strong>Admin &amp; operations</strong></td>
+          <td>Office staff</td>
+          <td>City dashboards, task creation and management, branch-level reporting, vendor PIN management per city, per-device admin unlock password.</td>
+        </tr>
+        <tr>
+          <td><strong>Field vendor</strong></td>
+          <td>On-site technicians</td>
+          <td>City PIN entry, <strong>My Tasks</strong> only — execute assigned work, enter costs, upload photos, <strong>Hold</strong> or <strong>Mark completed</strong>.</td>
+        </tr>
+      </table>
+      <p class="small">First-run choice is stored on the device. A device configured as <strong>Field vendor</strong> does not expose admin navigation.</p>
+    </section>
+
+    <section id="credentials">
+      <h2><span class="section-num">4</span> Credential reference — Karachi (seed / staging)</h2>
+      <p>Use your organisation’s authoritative records in production. The table below aligns with a typical seeded deployment for training.</p>
+      <table class="data">
+        <tr><th>Item</th><th>Description</th><th>Example value</th></tr>
+        <tr>
+          <td>Admin portal device password</td>
+          <td>Unlocks admin area on <em>this</em> device. Distinct from vendor city PINs. Change via <strong>Admin → Choose city → Admin portal device password</strong>.</td>
+          <td><code>Ksportaladmin1100</code></td>
+        </tr>
+        <tr>
+          <td>Karachi vendor portal PIN</td>
+          <td>Vendor sign-in for Karachi. Rotating PIN under <strong>Vendor PINs</strong> invalidates prior sessions until vendors enter the new PIN.</td>
+          <td><code>1122</code></td>
+        </tr>
+        <tr>
+          <td>Karachi vendor account</td>
+          <td>Vendor code receiving tasks created for Karachi in this deployment.</td>
+          <td><code>KS_IT_KHI_VENDOR</code></td>
+        </tr>
+        <tr>
+          <td>Karachi branches</td>
+          <td>Sites available for assignment and filters.</td>
+          <td>VitalFoakh, BRR, Endeavour, Creekside, Mega, Clifton</td>
+        </tr>
+      </table>
+    </section>
+
+    <section id="workflow">
+      <h2><span class="section-num">5</span> End-to-end workflow overview</h2>
+      <h3>Admin sequence (high level)</h3>
+      <ol class="workflow-steps">
+        <li>Select <strong>Admin &amp; operations</strong> at welcome; unlock with device password when prompted.</li>
+        <li>Open <strong>Admin portal</strong>; choose <strong>Karachi</strong> (or your operating city) via navigation.</li>
+        <li>Use <strong>Dashboard</strong> for counts and branch cost roll-ups; apply date filters as needed.</li>
+        <li>Create tasks under <strong>Create Task</strong>; confirm vendor visibility for that city.</li>
+        <li>Monitor and manage tasks under <strong>Task Management</strong> (search, filters, view/download/delete per policy).</li>
+        <li>Maintain <strong>Vendor PINs</strong> and device lock settings according to security policy.</li>
+      </ol>
+      <h3>Vendor sequence (high level)</h3>
+      <ol class="workflow-steps">
+        <li>Open <strong>Vendor portal</strong>; enter the <strong>city PIN</strong> issued for that location.</li>
+        <li>On <strong>My Tasks</strong>, filter by branch if required; open a task card.</li>
+        <li>On <strong>Task Detail</strong>, enter labour/installation (and other) costs, attach photos if required.</li>
+        <li>Choose <strong>Hold</strong> when work pauses (visible to admin as on hold) or <strong>Mark completed</strong> when finished.</li>
+        <li>Return to the list to verify status and totals.</li>
+      </ol>
+      <div class="callout">
+        <strong>Tip:</strong> Devices provisioned as admin can switch to <strong>Vendor portal</strong> from the portal picker to validate end-to-end behaviour without a second handset.
+      </div>
+    </section>
+
+    <section id="screens">
+      <h2><span class="section-num">6</span> Illustrated procedures (device screenshots)</h2>
+      <p class="lead">Figures follow the recommended teaching order: welcome and admin access, security screens, dashboards and tasks, vendor sign-in and execution.</p>
+
+      <h3 id="fig-welcome">Figure 1 — Welcome / usage choice</h3>
+      <p>Select <strong>Admin &amp; operations</strong> for back-office features or <strong>Field vendor</strong> for PIN-only vendor access.</p>
+      <figure><img src="screenshots/manual/01-welcome.png" alt="Welcome" /><figcaption>Figure 1 — Welcome / usage choice</figcaption></figure>
+
+      <h3 id="fig-unlock">Figures 2–3 — Admin unlock &amp; portal selection</h3>
+      <p>Enter the admin portal device password, then choose <strong>Admin portal</strong> or <strong>Vendor portal</strong>.</p>
+      <figure><img src="screenshots/manual/02-admin-portal-unlock.png" alt="Admin unlock" /><figcaption>Figure 2 — Admin portal unlock</figcaption></figure>
+      <figure><img src="screenshots/manual/03-select-portal.png" alt="Select portal" /><figcaption>Figure 3 — Select portal</figcaption></figure>
+
+      <h3 id="fig-pins">Figures 4–5 — Vendor PINs &amp; admin device password</h3>
+      <p><strong>Vendor PINs:</strong> per-city PIN and generation counter. <strong>Admin portal device password:</strong> rotates the lock shown at admin unlock (not the vendor PIN).</p>
+      <div class="figure-grid">
+        <figure><img src="screenshots/manual/04-vendor-pins.png" alt="Vendor PINs" /><figcaption>Figure 4 — Vendor portal PINs</figcaption></figure>
+        <figure><img src="screenshots/manual/05-admin-device-password.png" alt="Device password" /><figcaption>Figure 5 — Admin portal device password</figcaption></figure>
+      </div>
+
+      <h3 id="fig-dash">Figures 6–8 — Dashboard (Karachi)</h3>
+      <p><strong>Operations Overview</strong> summarises task counts; branch overview shows PKR totals; open the filter for date-range selection.</p>
+      <figure><img src="screenshots/manual/06-dashboard-operations-overview.png" alt="Operations Overview" /><figcaption>Figure 6 — Operations Overview</figcaption></figure>
+      <figure><img src="screenshots/manual/07-dashboard-branch-overview.png" alt="Branch overview" /><figcaption>Figure 7 — Total cost &amp; branch overview</figcaption></figure>
+      <figure><img src="screenshots/manual/08-dashboard-date-range.png" alt="Date range" /><figcaption>Figure 8 — Select Date Range</figcaption></figure>
+
+      <h3 id="fig-tasks">Figures 9–11 — Task Management &amp; Create Task</h3>
+      <p>Search and multi-filter task lists; create tasks with branch, category, vendor, and description; confirm success for the vendor queue.</p>
+      <figure><img src="screenshots/manual/09-admin-tasks.png" alt="Tasks" /><figcaption>Figure 9 — Task Management</figcaption></figure>
+      <figure><img src="screenshots/manual/10-create-task.png" alt="Create Task" /><figcaption>Figure 10 — Create Task</figcaption></figure>
+      <figure><img src="screenshots/manual/11-task-created-success.png" alt="Task created" /><figcaption>Figure 11 — Task created (example: Intercom @ BRR)</figcaption></figure>
+
+      <h3 id="fig-vendor">Figures 12–13 — Vendor sign-in &amp; My Tasks</h3>
+      <figure><img src="screenshots/manual/12-vendor-signin.png" alt="Vendor sign-in" /><figcaption>Figure 12 — Vendor sign-in</figcaption></figure>
+      <figure><img src="screenshots/manual/13-vendor-my-tasks.png" alt="My Tasks" /><figcaption>Figure 13 — My Tasks</figcaption></figure>
+
+      <h3 id="fig-detail">Figures 14–16 — Task detail &amp; updated list</h3>
+      <p><strong>Hold</strong> vs <strong>Mark completed</strong>; list reflects completed status and totals.</p>
+      <figure><img src="screenshots/manual/14-task-detail-on-hold.png" alt="On hold" /><figcaption>Figure 14 — Task on hold</figcaption></figure>
+      <figure><img src="screenshots/manual/15-task-detail-completed.png" alt="Completed" /><figcaption>Figure 15 — Task completed</figcaption></figure>
+      <figure><img src="screenshots/manual/16-vendor-my-tasks-updated.png" alt="My Tasks updated" /><figcaption>Figure 16 — My Tasks (after completion)</figcaption></figure>
+    </section>
+
+    <section id="tasks-ref">
+      <h2><span class="section-num">7</span> Task statuses &amp; actions</h2>
+      <table class="data">
+        <tr><th>Status / action</th><th>Meaning</th><th>Who sees it</th></tr>
+        <tr><td>Pending</td><td>Assigned; vendor work not finished.</td><td>Vendor &amp; admin lists.</td></tr>
+        <tr><td>On Hold</td><td>Paused (e.g. awaiting parts). Vendor initiated via <strong>Hold</strong>.</td><td>Vendor confirmation; admin dashboards/lists.</td></tr>
+        <tr><td>Completed</td><td>Closed with saved costs per policy.</td><td>Vendor &amp; admin; affects dashboards and branch totals.</td></tr>
+        <tr><td>Delete (admin)</td><td>Removes task when policy allows; often confirmatory.</td><td>Admin Task Management.</td></tr>
+      </table>
+    </section>
+
+    <section id="security">
+      <h2><span class="section-num">8</span> Security, PIN rotation &amp; device hygiene</h2>
+      <ul>
+        <li><strong>Separate secrets:</strong> Admin device password ≠ vendor city PIN. Train staff not to reuse corporate SSO passwords for device locks.</li>
+        <li><strong>PIN rotation:</strong> Changing a vendor PIN under <strong>Vendor PINs</strong> bumps generation and signs vendors out until they enter the new PIN — plan communication before rotating.</li>
+        <li><strong>Lost devices:</strong> Treat like credential compromise; rotate PINs, clear app data or remote-wipe per MDM policy.</li>
+        <li><strong>Screenshots for audits:</strong> Mask PINs and passwords in external-facing evidence packs.</li>
+      </ul>
+    </section>
+
+    <section id="troubleshooting">
+      <h2><span class="section-num">9</span> Troubleshooting</h2>
+      <table class="data">
+        <tr><th>Symptom</th><th>Recommended checks</th></tr>
+        <tr><td>Empty lists / no branches</td><td>Correct city selected; pull to refresh; verify network/VPN and API availability.</td></tr>
+        <tr><td>Admin unlock rejected</td><td>Confirm current device password vs default; caps lock; retry after typo.</td></tr>
+        <tr><td>Vendor PIN rejected</td><td>City matches PIN; ask ops for latest PIN if recently rotated.</td></tr>
+        <tr><td>Signed out unexpectedly</td><td>PIN generation may have changed — obtain new PIN from admin.</td></tr>
+        <tr><td>Camera / gallery blocked</td><td>OS permissions for camera and photos; retry after granting.</td></tr>
+      </table>
+    </section>
+
+    <section id="glossary">
+      <h2><span class="section-num">10</span> Glossary</h2>
+      <table class="data">
+        <tr><th>Term</th><th>Definition</th></tr>
+        <tr><td>Branch</td><td>Site or location within a city (e.g. VitalFoakh, BRR, Clifton).</td></tr>
+        <tr><td>City PIN</td><td>Vendor portal credential scoped to a city; managed under Vendor PINs.</td></tr>
+        <tr><td>Generation (PIN)</td><td>Version counter; increments when PIN changes to invalidate old sessions.</td></tr>
+        <tr><td>Admin portal device password</td><td>Local lock for admin features on a specific device.</td></tr>
+        <tr><td>My Tasks</td><td>Vendor queue of assigned work for the signed-in city/vendor.</td></tr>
+      </table>
+    </section>
+
+    <section id="support">
+      <h2><span class="section-num">11</span> Support &amp; escalation</h2>
+      <p>For production incidents (authentication outages, data not syncing, suspected unauthorised access), follow your internal IT service process. Capture: device model/OS, app version, city, approximate time, anonymised task IDs where safe, and whether PIN rotation occurred.</p>
+      <table class="data">
+        <tr><th>Channel</th><th>Notes</th></tr>
+        <tr><td>Internal IT / helpdesk</td><td>Primary route for credential resets and access policy.</td></tr>
+        <tr><td>Operations lead</td><td>Branch/city scope and vendor coordination.</td></tr>
+        <tr><td>Application owner</td><td>Defects requiring code or configuration change.</td></tr>
+      </table>
+    </section>
+
+    <section id="doc-control">
+      <h2><span class="section-num">12</span> Document control &amp; approvals</h2>
+      <table class="data">
+        <tr><th>Version</th><th>Date</th><th>Summary of changes</th></tr>
+        <tr><td>3.1</td><td>May 2026</td><td>Professional PDF layout: cover, TOC, expanded guidance, glossary, footer pagination.</td></tr>
+        <tr><td>3.0</td><td>May 2026</td><td>Karachi screenshot walkthrough; <code>screenshots/manual/</code> naming.</td></tr>
+        <tr><td>2.0</td><td>—</td><td>Prior Lahore narrative.</td></tr>
+      </table>
+      <div class="sig-block">
+        <table class="data">
+          <tr><th style="width:50%">Prepared by (name / role)</th><th style="width:50%">Date</th></tr>
+          <tr><td></td><td></td></tr>
+          <tr><th>Approved by (name / role)</th><th>Date</th></tr>
+          <tr><td></td><td></td></tr>
+        </table>
+      </div>
+    </section>
+
+    <p class="doc-end">Kickstart Vendor Hub — Operations Manual v3.1 · Regenerate PDF: <code>npm run manual:pdf</code> · Refresh images: <code>npm run manual:screenshots</code></p>
+
+  </div>
+
+</body>
+</html>

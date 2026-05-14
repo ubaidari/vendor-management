@@ -15,7 +15,7 @@ export const VENDOR_NAME_BY_SLUG: Record<CitySlug, string> = {
  * C4 is **Islamabad only**. L1 is **Lahore only**. Karachi has its own list; nothing is shared across cities.
  */
 export const BRANCHES_BY_SLUG: Record<CitySlug, readonly string[]> = {
-  karachi: ["VitalFoakh", "BRR", "Endeavour", "Creekside", "Mega"],
+  karachi: ["VitalFoakh", "BRR", "Endeavour", "Creekside", "Mega", "Clifton"],
   islamabad: ["C4"],
   lahore: ["L1"]
 };
